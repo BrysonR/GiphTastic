@@ -7,46 +7,75 @@ var imgURL = "";
 
 /* ------------------------------------------------------------------------ */
 
-/* clicking 'submit' creates a new topic button */
+function resetSearch () {
+    $("#search-input").val("");
+}
 
-$("#submit").on('click', function(event) {
+/* clicking 'submit' creates a new topic button */
+function searchGiphy (event) {
     event.preventDefault();
 
-  inputVal = $("#newSearch").val().trim();
+    inputVal = $("#search-input").val().trim();
 
-  var newButton = $("<button>");
-  newButton.addClass("allButtons");
-  newButton.attr("data", inputVal);
-  newButton.text(inputVal);
-  $("#buttons").append(newButton).append(" ");
+    // Prob don't wanna do anything if the input is empty or if the value has already been added so just short circuit it and return
+    if (inputVal.length == 0) return;
 
-});
+    if (topics.indexOf(inputVal) > -1) {
+        resetSearch();
+        return;
+    }
 
+    // add search to topics array for future duplication checks defined right above this
+    topics.push(inputVal);
+    createButtons();
+    // Reset input after clicking search
+    resetSearch();
+}
+
+function searchKeypress (event) {
+    if (event.keyCode === 13) {  //checks whether the pressed key is "Enter"
+        searchGiphy(event);
+    }
+}
 
 /* adding new buttons, adding new topics to the topics array, and adding a space between new buttons */
 
 function createButtons() {
-	
+    // this is kinda cheating but since you are adding the new input value to topics array everytime why not just clear out buttons
+    // and regenerate with new topic included? seems simpler and like less code. There's arguments for both sides but the performance
+    // hit is going to be unnoticable in this particular case.
+    $("#queries").empty();
+
 	for (var i=0; i<topics.length; i++) {
 		var newButton = $("<button>");
-		newButton.addClass("allButtons");
+		newButton.addClass("query-button");
 		newButton.attr("data", topics[i]);
 		newButton.text(topics[i]);
-		$("#buttons").append(newButton).append(" ").append(" ");
+		$("#queries").append(newButton).append(" ").append(" ");
 	}
 }
 createButtons();
 
+// simple stuff like this is nice to have as it's own function as it can be much more descriptive
+function resetGiphyResults () {
+    $("#giphy-results").empty();
+}
+
+function showClickCallout () {
+    $(".click-callout").show();
+}
 
 /* when a button is clicked, the api fetches 6 giphs and displays them as still images */
 
-$(document).on("click", ".allButtons", function(event) {
+$(document).on("click", ".query-button", function(event) {
     event.preventDefault();
 
+    showClickCallout();
     var topic = $(this).attr("data");
-    queryURL = baseURL + topic +"&limit=6&api_key=" + apiKey;
+    var resultCount = 6;
+    queryURL = baseURL + topic +"&limit=" + resultCount + "&api_key=" + apiKey;
     console.log(queryURL);
-    $("#showImage").empty();
+    resetGiphyResults();
 
     $.ajax({
 	    url: queryURL,
@@ -63,15 +92,15 @@ $(document).on("click", ".allButtons", function(event) {
   			imgElem.attr("data-still", imgURL);
   			imgElem.attr("data-animate", gifURL);
   			imgElem.attr("data-state", "still");
-  			imgElem.addClass("newImg");
-  			$("#showImage").append(imgElem);
+  			imgElem.addClass("image-result");
+  			$("#giphy-results").append(imgElem);
   		}
   	});
   });
 
 
 /* if the image is clicked, the gif will animate */
-$(document).on("click", ".newImg", function(event) {
+$(document).on("click", ".image-result", function(event) {
     event.preventDefault();
 
     var state = $(this).attr("data-state");

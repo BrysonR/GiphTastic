@@ -1,91 +1,167 @@
+/*
+GENERAL NOTES
+
+- Always put a space after the colon on properties. Leaving no space makes it more difficult to read
+- Leverage classes more often then ids. It's best to leave room for multiple similar elements from the get go
+  rather than starting off by restricting yourself to one single instance of something on a page
+- Classes are cheap. No reason to style based on tag names except for high level stuff such as body, and html and such
+  (aka, throw some classes on those h1s and labels and such and maybe just include the tag in the class name such as .search-label)
+- This is totally preference, but i personally like to hyphenate class names rather than camelcase as it's easier to read at a glance
+
+PHILOSOPHIES
+
+- In the long run, consistancy is everything. If you do decide to take a different approach than I mentioned above, be consistant about it
+  For example, if for some reason you hate a space after ever colon before property value, then do it that way for every single property,
+  don't do it here and there inconsistantly
+- Simplicity is everything. I chose just clean and simple outlined buttons with no gradients and to me that feels more to the point and
+  less distracting.
+- I don't know if it was required that you use a background image but generally those are frowned upon given scaling as the browser height
+  height changes and such becomes more complex than it needs to be. It seemed you didn't want just a plain background so i went with a
+  colorful gradient that is still simple and easy to maintain
+- I'd recommend, with you still getting your bearings about you that you always use
+  body {
+    min-height: 100vh;
+    height: 100%;
+  }
+  every time. As requirements and needs and your skills progress you'll learn more advanced techniques, but i've found (i personally
+  still use that 99% of the time) that seems to cover the majority of your needs. 100vh makes it 100 viewport height so 100% of the time
+  the body fills, at minimum, top to bottom of your screen AND height: 100% means that if your content is greater than 100vh, then body
+  will extend it's height to include that extra content. Some people will argue this, but I personally believe that every element should
+  contain it's children at every level. In other words, if the content of your page extends from the top to bottom of your screen, the parent
+  element body, should extend at least from top to bottom of the screen. You can recursively apply this to every element down the tree (a button
+  should be at least as tall as it's content). That's a lot to think about, just me rambling, but if you are interested in understanding better
+  i can probably explain better over slack :)
+*/
+
 * {
     box-sizing: border-box;
 }
 
 body {
-	background-image: url("../images/wood.jpg");
+	background: linear-gradient(to bottom right, #E33574, #204497);
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    /* Arial is so overrated. All the cool kids use custom fonts. I moved this to the body level as well so you only have to declare once */
+    font-family: Lato;
 }
 
-label{
+.header {
+    /* I used vh units here (viewport height) so that it scales on mobile. 300px is good for desktop, but 300px is nearly the height of an
+      iPhone so 15vh will give it a relative size to the height of the device without media queries...kinda like cheating...I know :) */
+    height: 15vh;
+    font-size: 3rem;
+    font-family: Lato;
+    /* I have no clue if you've learned much about flexbox yet, but here's a great use case for it */
+    display: flex;
+    align-items: center; /*center vertically*/
+    justify-content: center; /*center horizontally*/
+    color: white;
+    margin-bottom: 30px;
+    border-bottom: 1px solid white;
+}
+
+.query-button {
+    /* put bottom margin on each button rather than entire row so that if they wrap there is separation between the buttons */
+    margin-bottom: 15px;
+	border-radius: 100px;
+    padding: 0px 10px;
+    height: 30px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    /* It's the attention to detail that makes things stick out such as minute transtions such as this */
+    transition: color 150ms ease-in-out, border 150ms ease-in-out;
+}
+
+/* explained in html why this is an id and not a class. Also made it a little bigger than the query buttons to bring more attention to it */
+#search-button {
+    padding: 10px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 50px;
+    width: 200px;
+    /* It's the attention to detail that makes things stick out such as minute transtions such as this */
+    transition: color 150ms ease-in-out, border 150ms ease-in-out;
+    margin-bottom: 20px;
+}
+
+/* since i'm using a border radius, i'm going to deactivate the outline on focus so you don't get a square outline as you press down on the butt.
+  toggle this on and off to see what i'm talking about. it's a nice to have */
+#search-button:focus,
+.query-button:focus {
+    outline: none;
+}
+
+.query-button:hover,
+#search-button:hover {
+    color: #32cd32;
+    border-color: #32cd32; /* notice i don't have to do border: 1px solid #32cd32; and i can just override the color of the border */
+}
+
+.search-label {
 	color: white;
-	font-family:Arial;
-	font-size:15px;
-	font-weight:bold;
+	/*font-family:Lato;*/
+	font-size: 15px;
+	font-weight: bold;
+    margin-bottom: 10px;
 }
 
-h2 {
+/* this is kinda a shitty name, i'm blanking at the moment though. */
+.click-callout {
 	color: black;
-	font-family:Arial;
-	font-weight:bold;
+	font-weight: bold;
 	padding: 6px 24px;
-	background: white;
+	background: rgba(255,255,255,.5); /* make this 50% transparent since it's not the center of attention */
 	border-radius: 6px;
-	border: 1px solid #152612;
-
+    margin-bottom: 15px;
+    /* start off hiding this */
+    display: none;
 }
 
-.jumbotron {
-	background-image: url("../images/curtains.jpg");
-	background-image: 
-	background-size: cover;
-	color: white;
-}
-
-#top {
+/* no need for this since by default row handles all of this by default except for align items center.
+  Also, align-items: center; is a flexbox property and doesn't work without display: flex;...just fyi :)*/
+/*#top {
 	align-items: center;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
 	height: 100%;
+}*/
+
+/* #newSearch to #search-input to be more descriptive. Also, this is a rare case where an id is ok. Use id's cautiously thougha nd only
+  where there should only be one unique instance of an element on the page */
+#search-input {
+	width: 100%;
+    margin-bottom: 15px;
+    height: 40px;
+    padding: 0px 15px;
+    border-radius: 6px;
+    outline: none;
+    box-shadow: none;
+    border: 1px solid transparent;
 }
 
-.actionButtons {
-	
-	margin-bottom: 6px;
+#giphy-results {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
-#buttons {
-	height: 80px;
-	border-style: solid;
-}
-
-
-.allButtons {
-	-moz-box-shadow:inset 0px 1px 0px 0px #caefab;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
-	-webkit-user-select: none
-	box-shadow:inset 0px 1px 0px 0px #caefab;
-	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811));
-	background:-moz-linear-gradient(top, #77d42a 5%, #5cb811 100%);
-	background:-webkit-linear-gradient(top, #77d42a 5%, #5cb811 100%);
-	background:-o-linear-gradient(top, #77d42a 5%, #5cb811 100%);
-	background:-ms-linear-gradient(top, #77d42a 5%, #5cb811 100%);
-	background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811',GradientType=0);
-	background-color: #77d42a;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	border-radius: 6px;
-	border: 1px solid #152612;
-	display: inline-block;
-	cursor: pointer;
-	color: #306108;
-	font-family: Arial;
-	font-size: 15px;
-	font-weight: bold;
-	padding: 6px 24px;
-	text-decoration: none;
-	text-shadow: 0px 1px 0px #aade7c;
-}
-
-#newSearch {
-	width: 150px;
-}
-
-.newImg {
-	margin-top:10px;
-	margin-right: 10px;
+.image-result {
 	height: 200px;
 	width: 200px;
-	display: inline-grid;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
+/* Center results on everything BUT DESKTOP */
+@media (max-width: 1024px) {
+  #giphy-results {
+    justify-content: center;
+  }
+}

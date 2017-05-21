@@ -11,44 +11,62 @@
 	<!-- CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
+	<!-- One of the first rules of front end, imo, should be always use a free simple custom font since fonts make
+ 		all the difference and can really make your project pop at the cost of one line of code -->
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
 	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
   	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
 <body>
-	<div class="jumbotron">
-	      <h1 class="text-center"><strong>GiphTastic</strong></h1>
+	<div class="header">
+		<h1 class="text-center"><strong>GiphTastic</strong></h1>
 	</div>
-  	
   	<div class="container">
-		
-	    <div class="row" id="buttons" id="top">
-			
+	    <div class="row">
+			<!-- Never use a row just by itself. Every row should have a columns as direct children
+				since rows have a default negative margin on the sides in order to compensate for
+				the default positive padding on the sides of columns -->
+			<div class="col-sm-12" id="queries">
+
+			</div>
 	    </div>
 		<br>
 	    <div class="row">
-			<div class="col-md-3" id="actionButtons">
-		            <section class="form-group">
-		                <label for="newSearch">Enter topic</label>
-		                <input type="text" class="form-control" id="newSearch">
-		            </section>
-			
-	            
-	            <button type="submit" class="myButton" id="submit">Submit</button>
+			<!-- inputs that are super narrow are kinda like chodes, not ideal. You don't want them
+				to type a word like kaleidoscope and it go past the edge. Best to make them wider
+				than more narrow.-->
+			<div class="col-md-12">
+				<!-- no need for section just put margin on bottom of input -->
+            	<!-- <section class="form-group"> -->
+	                <label for="search-input" class="search-label">Enter topic</label>
+					<!-- passing event so that we can determine what key was pressed and submit if it is enter -->
+	                <input type="text" id="search-input" onkeydown="searchKeypress(event)">
+	            <!-- </section> -->
+					<!-- there should only be one search button since there is only one search so using id instead of class.
+				 		Also passing event similar to above so that we can have it to preventDefault -->
+	            	<button id="search-button" onclick="searchGiphy(event)">Submit</button>
+				</form>
            	</div>
 
-	    	<div class="col-md-6" id="showImage">
+	    	<div class="col-sm-12 col-lg-9">
+				<div id="giphy-results">
+
+				</div>
 	    	</div>
 		<!--if there is time, move some of the response to a second column -->
-	    	<div class="col-md-3" id="clickImage">
-	    		<h2>If you click an image, fun things should occur...
-				<br>
-				<br>By the way, this is <strong>not</strong> a button.
-	    		</h2>
+	    	<div class="col-sm-12 col-lg-3">
+				<div class="click-callout">
+		    		<h2>If you click an image, fun things should occur...
+					<br>
+					<br>By the way, this is <strong>not</strong> a button.
+		    		</h2>
+				</div>
 	    	</div>
 
 	 </div>
-	
+
   	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script src="assets/javascript/giphy.js"></script>
